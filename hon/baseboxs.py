@@ -1,7 +1,11 @@
+import re
+
 from rply.token import BaseBox
 
-class ValueBox(BaseBox):
+from hon.constants import Token
 
+
+class ValueBox(BaseBox):
     def eval(self):
         return self.value
 
@@ -9,6 +13,7 @@ class ValueBox(BaseBox):
 class LambdaBox(ValueBox):
     def __init__(self):
         self.value = None
+
 
 class String(BaseBox):
     def __init__(self, value):
@@ -33,6 +38,7 @@ class AssignmentOperator(ValueBox):
     def eval(self):
         return self.value
 
+
 class Comma(ValueBox):
     def __init__(self):
         self.value = ","
@@ -43,17 +49,40 @@ class Attribute(BaseBox):
         self.name = name
         self.value = value
 
-
     def eval(self):
         return '{}{}"{}"'.format(
             AttributeName(self.name).eval(),
             AssignmentOperator().eval(),
-            String(self.value).eval()
+            String(self.value).eval(),
         )
+
 
 class MultipleAttribute(BaseBox):
     def __init__(self, attributes):
         self.attributes = attributes
 
     def eval(self):
-        return ' '.join((attribute.eval() for attribute in self.attributes))
+        return " ".join(attribute.eval() for attribute in self.attributes)
+
+
+class Bracket(BaseBox):
+    def __init__(self, expression):
+        self.expression = expression.eval()
+
+    def eval(self):
+        pattern = r'([a-zA-Z]+[a-zA-Z\-]*=["|\'][^"\\|\\.]*["|\'])'
+        return tuple(re.findall(pattern, self.expression))
+
+
+class MultipleBracket(BaseBox):
+    def __init__(self, brackets):
+        self.brackets = brackets
+
+    def eval(self):
+        brackets = []
+        for bracket in self.brackets:
+            if isinstance(bracket, Bracket):
+                brackets.append(bracket.eval())
+            else:
+                brackets.extend(bracket.eval())
+        return brackets

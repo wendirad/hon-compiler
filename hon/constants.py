@@ -1,10 +1,9 @@
-
 class Token:
     """
     A list of all token names, accepted by the parser.
     """
 
-    LEFT_BRACE = r'\{'
+    LEFT_BRACE = r"\{"
     RIGHT_BRACE = r"\}"
     LEFT_BRACKET = r"\["
     RIGHT_BRACKET = r"\]"
