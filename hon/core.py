@@ -11,6 +11,7 @@ lexer_generator.add("LEFT_BRACKET", Token.LEFT_BRACKET)
 lexer_generator.add("RIGHT_BRACKET", Token.RIGHT_BRACKET)
 lexer_generator.add("LEFT_PARA", Token.LEFT_PARA)
 lexer_generator.add("RIGHT_PARA", Token.RIGHT_PARA)
+lexer_generator.add("SELF_TAG", Token.SELF_TAG)
 lexer_generator.add("TAG", Token.TAG)
 lexer_generator.add("COMMA", Token.COMMA)
 lexer_generator.add("STRING", Token.STRING)
@@ -31,12 +32,17 @@ pg = ParserGenerator(
         "RIGHT_BRACKET",
         "LEFT_PARA",
         "RIGHT_PARA",
+        "SELF_TAG",
         "TAG",
         "COMMA",
         "STRING",
-        "VALRIABLE",
+        "VARIABLE",
         "VAR_ACCESS",
         "ATTRIBUTE",
         "ASSIGNMENT_OPERATOR",
     ],
+    precedence=[
+        ('left', ['SELF_TAG']),
+        ('left', ['TAG']),
+    ]
 )

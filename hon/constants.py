@@ -9,10 +9,11 @@ class Token:
     RIGHT_BRACKET = r"\]"
     LEFT_PARA = r"\("
     RIGHT_PARA = r"\)"
-    TAG = r"\[a-zA-Z0-9]+"
+    TAG = r":[a-zA-Z0-9\_]+"
+    SELF_TAG = r":([a-zA-Z0-9\_]+):"
     COMMA = r","
     STRING = r'"(?:[^"\\]|\\.)*"|\'(?:[^\'\\]|\\.)*\''
-    VARIABLE = r"\:[a-zA-Z]\w+"
+    VARIABLE = r"\%\%[a-zA-Z]\w+"
     ATTRIBUTE = r"[a-zA-Z]+(-[a-zA-Z]+)*"
     VAR_ACCESS = r"\%[a-zA-Z\_]+[a-zA-Z0-9\_]+"
     ASSIGN_OP = r"\="
