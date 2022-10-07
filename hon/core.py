@@ -1,5 +1,4 @@
 from rply import LexerGenerator, ParserGenerator
-from rply.token import BaseBox
 
 from hon.constants import Token
 
@@ -20,7 +19,7 @@ lexer_generator.add("ATTRIBUTE", Token.ATTRIBUTE)
 lexer_generator.add("VAR_ACCESS", Token.VAR_ACCESS)
 lexer_generator.add("ASSIGNMENT_OPERATOR", Token.ASSIGN_OP)
 
-lexer_generator.ignore("\s+")
+lexer_generator.ignore(r"\s+")
 
 lexer = lexer_generator.build()
 

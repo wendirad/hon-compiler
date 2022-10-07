@@ -1,20 +1,23 @@
-# :noqa F405
+# :noqa: F405
 
-from hon.baseboxs import *
+from hon.baseboxs import *  # noqa: F405
 from hon.core import pg
 
 
-@pg.production("expression : multiple_tag")
-# @pg.production("expression : parentheses_tag")
+@pg.production("expression : content expression")
+@pg.production("expression : string expression")
+@pg.production("expression : variable_definition expression")
+@pg.production("expression : variable_access expression")
+@pg.production("expression : tag expression")
 def expression(state, exp):
-    return exp[0]
+    return Expression(filter(lambda ep: not isinstance(ep, LambdaBox), exp))
 
 
 @pg.production("comma : ")
 @pg.production("multiple_variable_access : ")
 @pg.production("multiple_attribute_definition : ")
 @pg.production("multiple_bracket_definition : ")
-@pg.production("multiple_tag : ")
+@pg.production("expression : ")
 def empty_expression(state, exp):
     return LambdaBox()
 
@@ -73,7 +76,7 @@ def variable(state, exp):
 def variable_definition(state, exp):
     variable, _, value = exp
     state.variables[variable.eval()] = value.eval()
-    return value
+    return LambdaBox()
 
 
 @pg.production("variable_access : VAR_ACCESS")
@@ -100,17 +103,20 @@ def attribute_name(state, exp):
     "attribute_definition : attribute_name assignment_operator string"
 )
 @pg.production(
-    "attribute_definition : attribute_name assignment_operator variable_definition"
+    "attribute_definition : "
+    "attribute_name assignment_operator variable_definition"
 )
 @pg.production(
-    "attribute_definition : attribute_name assignment_operator multiple_variable_access"
+    "attribute_definition : "
+    "attribute_name assignment_operator multiple_variable_access"
 )
 def attribute_definition(state, exp):
     return Attribute(*exp)
 
 
 @pg.production(
-    "multiple_attribute_definition : attribute_definition comma multiple_attribute_definition"
+    "multiple_attribute_definition : "
+    "attribute_definition comma multiple_attribute_definition"
 )
 def multiple_attribute_definition(state, exp):
     return MultipleAttribute(
@@ -119,56 +125,55 @@ def multiple_attribute_definition(state, exp):
 
 
 @pg.production(
-    "bracket_definition : left_bracket attribute_definition multiple_attribute_definition right_bracket"
+    "bracket_definition : left_bracket attribute_definition comma "
+    "multiple_attribute_definition right_bracket"
 )
 def bracket_definition(state, exp):
     return Bracket(filter(lambda ep: not isinstance(ep, LambdaBox), exp[1:-1]))
 
 
 @pg.production(
-    "multiple_bracket_definition : bracket_definition multiple_bracket_definition"
+    "multiple_bracket_definition : "
+    "bracket_definition multiple_bracket_definition"
 )
 def multiple_bracket_definition(state, exp):
     return MultipleBracket(
         filter(lambda ep: not isinstance(ep, LambdaBox), exp)
     )
 
-@pg.production('tag_name : SELF_TAG')
-@pg.production('tag_name : TAG')
+
+@pg.production("tag_name : SELF_TAG")
+@pg.production("tag_name : TAG")
 def tag_name(state, exp):
     return TagName(exp[0].getstr())
 
 
-@pg.production('tag : tag_name')
+@pg.production("tag : tag_name")
 def empty_tag(state, exp):
     """Tags with out attribute."""
     return EmptyTag(exp[0])
+
 
 @pg.production("tag : tag_name bracket_definition")
 def tag(state, exp):
     return Tag(*exp)
 
 
-@pg.production('parentheses_tag : tag_name left_parentheses bracket_definition bracket_definition multiple_bracket_definition right_parentheses')
+@pg.production(
+    "tag : tag_name left_parentheses bracket_definition bracket_definition "
+    "multiple_bracket_definition right_parentheses"
+)
 def parentheses_tag(state, exp):
     tag_name, lp, *attributes, rp = exp
     return ParenthesesTag(
-        tag_name,
-        filter(lambda ep: not isinstance(ep, LambdaBox), attributes)
+        tag_name, filter(lambda ep: not isinstance(ep, LambdaBox), attributes)
     )
 
-@pg.production('multiple_tag : tag multiple_tag')
-@pg.production('multiple_tag : parentheses_tag multiple_tag')
-def multiple_tag(state, exp):
-    return MultipleTag(
-        filter(lambda ep: not isinstance(ep, LambdaBox), exp)
-    )
 
-@pg.production('single_tag : tag')
-@pg.production('single_tag : parentheses_tag')
-def single_tag(state, exp):
-    return exp[0]
-
+@pg.production("content : tag left_brace expression right_brace")
+def content(state, exp):
+    tag, _, expression, _ = exp
+    return Content(tag, expression)
 
 
 parser = pg.build()

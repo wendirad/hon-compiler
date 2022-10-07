@@ -1,8 +1,4 @@
-import re
-
 from rply.token import BaseBox
-
-from hon.constants import Token
 
 
 class ValueBox(BaseBox):
@@ -15,7 +11,12 @@ class ValueBox(BaseBox):
 
 class LambdaBox(ValueBox):
     def __init__(self, value=None):
-        self.value = value = getattr(self, "value", None)
+        self.value = value = getattr(self, "value", None)  # noqa: F841
+
+
+class Expression(ValueBox):
+    def eval(self):
+        return "".join((expression.eval() for expression in self.value))
 
 
 class LeftBrace(LambdaBox):
@@ -65,11 +66,6 @@ class VariableAccess(ValueBox):
         return self.value.lstrip("%").lower()
 
 
-class MultipleVariableAccess(ValueBox):
-    def eval(self):
-        return "".join((var.eval() for var in self.value))
-
-
 class AttributeName(ValueBox):
     def eval(self):
         return self.value.lower()
@@ -91,16 +87,19 @@ class MultipleAttribute(ValueBox):
     def eval(self):
         return " ".join((attribute.eval() for attribute in self.value))
 
+
 class TagName(ValueBox):
     def eval(self):
-        return self.value.strip(':'), self.is_self_closing()
+        return self.value.strip(":"), self.is_self_closing()
 
     def is_self_closing(self):
-        return self.value.endswith(':')
+        return self.value.endswith(":")
+
 
 class Bracket(ValueBox):
     def eval(self):
         return " ".join((attribute.eval() for attribute in self.value))
+
 
 class MultipleBracket(ValueBox):
     def eval(self):
@@ -118,8 +117,9 @@ class EmptyTag(BaseBox):
         self.name, self.is_self_closing = tag_name.eval()
 
     def eval(self):
-        tag = '<{0} />' if self.is_self_closing else '<{0}></{0}>'
+        tag = "<{0} />" if self.is_self_closing else "<{0}></{0}>"
         return tag.format(self.name)
+
 
 class Tag(BaseBox):
     def __init__(self, tag_name, attribute):
@@ -127,12 +127,9 @@ class Tag(BaseBox):
         self.attribute = attribute
 
     def eval(self):
-        tag = '<{0} {1} />' if self.is_self_closing else '<{0} {1}></{0}>'
+        tag = "<{0} {1} />" if self.is_self_closing else "<{0} {1}></{0}>"
         return tag.format(self.name, self.attribute.eval())
 
-class MultipleTag(ValueBox):
-    def eval(self):
-        return '\n'.join((tag.eval() for tag in self.value))
 
 class ParenthesesTag(BaseBox):
     def __init__(self, tag_name, attributes):
@@ -140,4 +137,22 @@ class ParenthesesTag(BaseBox):
         self.attributes = attributes
 
     def eval(self):
-        return '\n'.join((Tag(self.tag_name, attribute).eval() for attribute in self.attributes))
+        value = ""
+        for attribute in self.attributes:
+            if isinstance(attribute, Bracket):
+                value += Tag(self.tag_name, attribute).eval()
+            else:
+                for attr in attribute.eval():
+                    value += Tag(self.tag_name, ValueBox(attr)).eval()
+        return value
+
+
+class Content(BaseBox):
+    def __init__(self, tag, expression):
+        self.tag = tag
+        self.expression = expression
+
+    def eval(self):
+        return self.tag.eval().replace(
+            "></", ">{}</".format(self.expression.eval())
+        )
