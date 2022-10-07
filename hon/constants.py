@@ -12,8 +12,8 @@ class Token:
     TAG = r":[a-zA-Z0-9\_]+"
     SELF_TAG = r":([a-zA-Z0-9\_]+):"
     COMMA = r","
-    STRING = r'"(?:[^"\\]|\\.)*"|\'(?:[^\'\\]|\\.)*\''
+    ASSIGN_OP = r"\="
     VARIABLE = r"\%\%[a-zA-Z]\w+"
     ATTRIBUTE = r"[a-zA-Z]+(-[a-zA-Z]+)*"
     VAR_ACCESS = r"\%[a-zA-Z\_]+[a-zA-Z0-9\_]+"
-    ASSIGN_OP = r"\="
+    STRING = r'"(?:[^"\\]|\\.)*"|\'(?:[^\'\\]|\\.)*\''

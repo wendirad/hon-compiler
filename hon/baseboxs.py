@@ -12,8 +12,8 @@ class ValueBox(BaseBox):
         return self.value
 
 class LambdaBox(ValueBox):
-    def __init__(self):
-        self.value = getattr(self, 'value', None)
+    def __init__(self, value=None):
+        self.value = value = getattr(self, 'value', None)
 
 class LeftBrace(LambdaBox):
     value = '{'
@@ -43,19 +43,49 @@ class String(ValueBox):
     def eval(self):
         return self.value.strip("'\"")
 
-class Variable(ValueBox):
+class VariableName(ValueBox):
     def eval(self):
-        return self.value.lstrip("%%")
+        return self.value.lstrip("%%").lower()
 
+class VariableAccess(ValueBox):
+    def eval(self):
+        return self.value.lstrip('%').lower()
+
+class MultipleVariableAccess(ValueBox):
+    def eval(self):
+        return ''.join((var.eval() for var in self.value))
+
+class AttributeName(ValueBox):
+    def eval(self):
+        return self.value.lower()
 
 class Attribute(BaseBox):
-    def __init__(self, name, value):
-        self.name = name
+    def __init__(self, attr_name, operator, value):
+        self.attr_name = attr_name
+        self.operator = operator
         self.value = value
 
     def eval(self):
         return '{}{}"{}"'.format(
-            AttributeName(self.name).eval(),
-            AssignmentOperator().eval(),
-            String(self.value).eval(),
+            self.attr_name.eval(),
+            self.operator.eval(),
+            self.value.eval()
         )
+
+class MultipleAttribute(ValueBox):
+    def eval(self):
+        return ' '.join((attribute.eval() for attribute in self.value))
+
+class Bracket(ValueBox):
+    def eval(self):
+        return ' '.join((attribute.eval() for attribute in self.value))
+
+class MultipleBracket(ValueBox):
+    def eval(self):
+        brackets = []
+        for bracket in self.value:
+            if isinstance(bracket, Bracket):
+                brackets.append(bracket.eval())
+            else:
+                brackets.extend(bracket.eval())
+        return brackets
