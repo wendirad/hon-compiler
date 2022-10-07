@@ -42,7 +42,7 @@ pg = ParserGenerator(
         "ASSIGNMENT_OPERATOR",
     ],
     precedence=[
-        ('left', ['SELF_TAG']),
-        ('left', ['TAG']),
-    ]
+        ("left", ["SELF_TAG"]),
+        ("left", ["TAG"]),
+    ],
 )
