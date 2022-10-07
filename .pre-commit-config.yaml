@@ -10,7 +10,6 @@ repos:
       - id: debug-statements
       - id: end-of-file-fixer
       - id: name-tests-test
-        args: [ "--django" ]
       - id: trailing-whitespace
   - repo: https://github.com/psf/black
     rev: 22.6.0
