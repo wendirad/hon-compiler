@@ -1,25 +1,23 @@
 # HON Compiler
-HON is a simple, human-readable, JSON-like syntax for describing HTML document.
+HON is a simple, human-readable, JSON-like syntax programming language for describing HTML document.
 
 ## Example
 ```
 %%title="Hello, World!"
 "<!doctype html>"
 :html[lang="en"] {
-    :head {
-        :meta (
-            [charset="utf-8"]
-            [name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"]
-        )
-        :link:[rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css"]
-        :title { %title }
-    }
-    :body {
-        :h1 { %title }
-        :script (
-            [src="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/js/bootstrap.min.js"]
-        )
-    }
+  :head {
+    :meta (
+      [charset="utf-8"]
+      [name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"]
+    )
+    :link:[rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css"]
+    :title { %title }
+  }
+  :body {
+    :h1 { %title }
+    :script[src="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/js/bootstrap.min.js"]
+  }
 }
 ```
 ### Output
