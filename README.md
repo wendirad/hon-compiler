@@ -77,7 +77,6 @@ HON is a simple, human-readable, JSON-like syntax programming language for descr
 
 ```
 <attribute_definition> ::= <attribute_name> <assignment_operator> <string>
-            | <attribute_name> <assignment_operator> <variable_definition>
             | <attribute_name> <assignment_operator> <multiple_variable_access>
 ```
 
