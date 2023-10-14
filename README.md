@@ -1,5 +1,10 @@
 # HON Compiler
-HON is a simple, human-readable, JSON-like syntax programming language for describing HTML document.
+HON is a simple, human-readable, JSON-like syntax language for describing HTML documents.
+
+## Features
+- **Variable Declaration**: Yes, in HTML 😊
+- **Loops**: Simple, easy, and lovable. 🪄 
+- **Easy error handling**: No more unstructured results due to the missing closing tag. Hon is doing it by itself.
 
 ## Example
 ```
@@ -38,7 +43,7 @@ HON is a simple, human-readable, JSON-like syntax programming language for descr
 ```
 
 ## Grammer
-* This grammer is described in BNF = Backus Normal Form or Backus Naur Form. 
+* This grammar is described in the `BNF` Backus Normal Form or Backus Naur Form. 
 
 ```
 <expression> ::= 
