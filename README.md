@@ -1,15 +1,31 @@
 
 <p align="center">
     <img src="https://i.ibb.co/cXV5p25L/1000008279-removebg-preview.png" alt="1000008279-removebg-preview" border="0" />
-<br />
-    A simple, human-readable, JSON-like syntax language for describing HTML documents.
 </p>
 
+<h1 align="center">HON (HTML Object Notation) ✨ </h1>
 
-## Features
-- **Variable Declaration**: Yes, in HTML 😊
-- **Loops**: Simple, easy, and lovable. 🪄 
-- **Easy error handling**: No more unstructured results due to the missing closing tag. Hon is doing it by itself.
+**HON** – a clean, human-readable, JSON-like language for writing HTML that feels natural and joyful.
+
+## Why HON? 🚀
+
+- HTML without the tag soup  
+- Structure as clear as JSON, but made for humans  
+- No more missing closing tags – ever  
+- Variables, loops, and real power in minimal syntax  
+
+Write HTML the way it should have always been.
+
+## Features 🔥
+
+- Variables → `%%title="Hello World"` ♻️  
+- Clean loops → repeat anything effortlessly 🔁  
+- Auto-balanced tags → perfectly valid HTML guaranteed 🛡️  
+- Helpful, precise error messages ⚡  
+
+Ideal for learning, prototyping, static sites, or just loving clean code.
+
+Ready to write beautiful HTML again? Dive in! 👇
 
 ## Example
 ```
