@@ -1,9 +1,10 @@
 
-<img src="https://i.ibb.co/cXV5p25L/1000008279-removebg-preview.png" alt="1000008279-removebg-preview" border="0" align="center">
+<p align="center">
+    <img src="https://i.ibb.co/cXV5p25L/1000008279-removebg-preview.png" alt="1000008279-removebg-preview" border="0" />
+<br />
+    A simple, human-readable, JSON-like syntax language for describing HTML documents.
+</p>
 
-# HON Compiler
-
-HON is a simple, human-readable, JSON-like syntax language for describing HTML documents.
 
 ## Features
 - **Variable Declaration**: Yes, in HTML 😊
